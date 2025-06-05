@@ -1,0 +1,58 @@
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import html2canvas from 'html2canvas';
+
+export default function PokemonCardGenerator() {
+  const [name, setName] = useState('Abu Naim');
+  const [hp, setHp] = useState(100);
+  const [type, setType] = useState('Electric');
+  const [attack1, setAttack1] = useState('Destruction of Electronics');
+  const [attack2, setAttack2] = useState('Pitot Circle');
+  const [description1, setDescription1] = useState('Destroys all devices within a 5m radius.');
+  const [description2, setDescription2] = useState('Distracts the enemy until dizzy.');
+  const [image, setImage] = useState('/placeholder.png');
+
+  const handleDownload = () => {
+    const cardElement = document.getElementById('pokemon-card');
+    if (cardElement) {
+      html2canvas(cardElement).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `${name}_card.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+  };
+
+  return (
+    <div className="p-6 space-y-4 max-w-2xl mx-auto">
+      <div className="grid grid-cols-2 gap-4">
+        <Input placeholder="Name" value={name} onChange={e => setName(e.target.value)} />
+        <Input placeholder="HP" type="number" value={hp} onChange={e => setHp(e.target.value)} />
+        <Input placeholder="Type" value={type} onChange={e => setType(e.target.value)} />
+        <Input placeholder="Attack 1" value={attack1} onChange={e => setAttack1(e.target.value)} />
+        <Input placeholder="Attack 1 Description" value={description1} onChange={e => setDescription1(e.target.value)} />
+        <Input placeholder="Attack 2" value={attack2} onChange={e => setAttack2(e.target.value)} />
+        <Input placeholder="Attack 2 Description" value={description2} onChange={e => setDescription2(e.target.value)} />
+      </div>
+
+      <Card id="pokemon-card" className="bg-yellow-200 p-4 rounded-2xl shadow-xl text-center">
+        <CardContent>
+          <div className="text-xl font-bold">{name} — HP {hp}</div>
+          <div className="italic text-sm">Type: {type}</div>
+          <img src={image} alt="Character" className="mx-auto my-4 rounded-xl w-48 h-48 object-cover border-4 border-yellow-400" />
+          <div className="text-left">
+            <div className="font-bold">⚡ {attack1}</div>
+            <div className="text-sm mb-2">{description1}</div>
+            <div className="font-bold">🔁 {attack2}</div>
+            <div className="text-sm">{description2}</div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Button onClick={handleDownload} className="w-full">Download Card</Button>
+    </div>
+  );
+}
